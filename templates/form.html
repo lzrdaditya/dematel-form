@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DEMATEL Input Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+        select, input[type="number"] {
+            width: 100%;
+            padding: 4px;
+        }
+        h2 {
+            text-align: center;
+        }
+        .submit-btn {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>DEMATEL Form - Expert: {{ expert }}</h2>
+
+        <form method="post" action="/form">
+            <input type="hidden" name="token" value="{{ token }}">
+            <input type="hidden" name="expert" value="{{ expert }}">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>From \ To</th>
+                        {% for to in factors %}
+                            <th>{{ to }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for from_factor in factors %}
+                        <tr>
+                            <th>{{ from_factor }}</th>
+                            {% for to_factor in factors %}
+                                <td>
+                                    {% if from_factor == to_factor %}
+                                        <input type="hidden" name="matrix_{{ from_factor }}_{{ to_factor }}" value="0">
+                                        0
+                                    {% else %}
+                                        <select name="matrix_{{ from_factor }}_{{ to_factor }}">
+                                            <option value="0">No influence</option>
+                                            <option value="1">Low</option>
+                                            <option value="2">Medium</option>
+                                            <option value="3">High</option>
+                                            <option value="4">Very High</option>
+                                        </select>
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="submit-btn">
+                <input type="submit" value="Submit Form">
+            </div>
+        </form>
+    </div>
+</body>
+</html>

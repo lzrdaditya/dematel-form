@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DEMATEL Access</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to DEMATEL Web App</h1>
+        <form method="post" action="/form">
+            <label for="token">Enter your access token:</label>
+            <input type="text" id="token" name="token" required>
+            <input type="submit" value="Continue">
+        </form>
+        {% if error %}
+            <p style="color: red;">{{ error }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>
