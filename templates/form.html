@@ -1,87 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>DEMATEL Input Form</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 30px;
-        }
-        .container {
-            max-width: 900px;
-            margin: auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            padding: 10px;
-            border: 1px solid #ccc;
-            text-align: center;
-        }
-        select, input[type="number"] {
-            width: 100%;
-            padding: 4px;
-        }
-        h2 {
-            text-align: center;
-        }
-        .submit-btn {
-            margin-top: 20px;
-            text-align: center;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>DEMATEL Matrix Input</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='modern.css') }}">
+  <style>
+    /* Highlight unselectable (diagonal) cells */
+    .matrix-table .cell-unselectable {
+      background: #e9ecef !important;
+      color: #a1a7b3 !important;
+      font-weight: 700;
+      text-align: center;
+      border-radius: 6px;
+      box-shadow: 0 0 0 2px #c3c8d1 inset;
+      cursor: not-allowed;
+      transition: box-shadow 0.2s;
+    }
+    .matrix-table .cell-unselectable:focus, 
+    .matrix-table .cell-unselectable:hover {
+      box-shadow: 0 0 0 3px #0071e3 inset;
+      outline: none;
+    }
+    /* Tooltip bar styling */
+    .matrix-tooltip-bar {
+      background: #f4f7fb;
+      color: #1460aa;
+      font-size: 1.08em;
+      border-radius: 7px;
+      min-height: 2.1em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+      box-shadow: 0 1px 3px rgba(80,80,100,0.04);
+      font-weight: 500;
+      transition: background 0.2s, color 0.2s;
+      white-space: pre-line;
+      padding: 0.3em 0.7em;
+    }
+    @media (max-width: 900px) {
+      .matrix-tooltip-bar {
+        font-size: 0.95em;
+        padding: 0.2em 0.35em;
+      }
+    }
+    /* Freeze top row and first column */
+    .table-scroll {
+      overflow: auto;
+      max-height: 60vh;
+      position: relative;
+    }
+    .matrix-table {
+      border-collapse: separate;
+      border-spacing: 0;
+      min-width: max-content;
+      width: 100%;
+    }
+    .matrix-table th {
+      position: sticky;
+      background: #f8fafc;
+      z-index: 2;
+    }
+    /* Freeze thead row */
+    .matrix-table thead th {
+      top: 0;
+      z-index: 3;
+    }
+    /* Freeze first column for all header and cells */
+    .matrix-table th:first-child {
+      left: 0;
+      z-index: 4;
+      background: #f3f7fc;
+      box-shadow: 2px 0 6px -2px #bbb1;
+    }
+    .matrix-table td:first-child {
+      position: sticky;
+      left: 0;
+      background: #f8fafc;
+      z-index: 2;
+      box-shadow: 2px 0 6px -2px #bbb1;
+    }
+    /* Top-left corner cell on top of all */
+    .matrix-table thead th:first-child {
+      z-index: 5;
+      background: #f3f7fc;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h2>DEMATEL Form - Expert: {{ expert }}</h2>
+  <main>
+    <section class="matrix-container">
+      <h1 class="main-title">DEMATEL Matrix Input</h1>
+      <div class="expert-info">Expert: <strong>{{ expert }}</strong></div>
+      <form method="POST" class="matrix-form" id="matrix-form" autocomplete="off">
+        <input type="hidden" name="matrix_submitted" value="yes">
+        <div id="matrix-tooltip-bar" class="matrix-tooltip-bar"></div>
+        <div class="table-scroll table-responsive">
+          <table class="matrix-table">
+            <thead>
+              <tr>
+                <th>From \ To</th>
+                {% for f in factors %}
+                  <th>{{ f }}</th>
+                {% endfor %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for from_factor in factors %}
+                {% set i = loop.index0 %}
+                <tr>
+                  <th>{{ from_factor }}</th>
+                  {% for to_factor in factors %}
+                    {% set j = loop.index0 %}
+                    <td 
+                      {% if i == j %}
+                        class="cell-unselectable" 
+                        tabindex="0" 
+                        data-tooltip="How much {{ from_factor }} Influenced {{ to_factor }} \n(Unselectable: self-influence is always 0)"
+                      {% else %}
+                        tabindex="0"
+                        data-tooltip="How much {{ from_factor }} Influenced {{ to_factor }} "
+                      {% endif %}
+                    >
+                      {% if i == j %}
+                        <span>No influence<br>0</span>
+                      {% else %}
+                        <select name="matrix_{{i}}_{{j}}" class="modern-select" required>
+                          <option value="0" selected>No influence 0</option>
+                          <option value="1">Very Low Influenced1</option>
+                          <option value="2">Low Influenced 2</option>
+                          <option value="3">High Influenced 3</option>
+                          <option value="4">Very High Influenced 4</option>
+                        </select>
+                      {% endif %}
+                    </td>
+                  {% endfor %}
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <button type="submit" class="modern-btn" id="submit-btn" style="min-width:180px;">
+          <span id="btn-text">Submit Matrix</span>
+          <span id="loader" style="display:none;position:relative;top:2px;left:8px;width:18px;height:18px;">
+            <svg width="18" height="18" viewBox="0 0 44 44" stroke="#0071e3">
+              <g fill="none" fill-rule="evenodd" stroke-width="4">
+                <circle cx="22" cy="22" r="18" stroke-opacity=".3"/>
+                <path d="M40 22c0-9.94-8.06-18-18-18">
+                  <animateTransform
+                    attributeName="transform"
+                    type="rotate"
+                    from="0 22 22"
+                    to="360 22 22"
+                    dur="0.8s"
+                    repeatCount="indefinite"/>
+                </path>
+              </g>
+            </svg>
+          </span>
+        </button>
+      </form>
+    </section>
+  </main>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Button submit loader
+      const form = document.getElementById('matrix-form');
+      const btn = document.getElementById('submit-btn');
+      const loader = document.getElementById('loader');
+      const btnText = document.getElementById('btn-text');
+      if(form) {
+        form.addEventListener('submit', function(){
+          btn.disabled = true;
+          loader.style.display = 'inline-block';
+          btnText.textContent = "Submitting...";
+        });
+      }
 
-        <form method="post" action="/form">
-            <input type="hidden" name="token" value="{{ token }}">
-            <input type="hidden" name="expert" value="{{ expert }}">
+      // Tooltip bar logic
+      const tooltipBar = document.getElementById('matrix-tooltip-bar');
+      function setTooltip(text) {
+        tooltipBar.textContent = text || "";
+      }
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>From \ To</th>
-                        {% for to in factors %}
-                            <th>{{ to }}</th>
-                        {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for from_factor in factors %}
-                        <tr>
-                            <th>{{ from_factor }}</th>
-                            {% for to_factor in factors %}
-                                <td>
-                                    {% if from_factor == to_factor %}
-                                        <input type="hidden" name="matrix_{{ from_factor }}_{{ to_factor }}" value="0">
-                                        0
-                                    {% else %}
-                                        <select name="matrix_{{ from_factor }}_{{ to_factor }}">
-                                            <option value="0">No influence</option>
-                                            <option value="1">Low</option>
-                                            <option value="2">Medium</option>
-                                            <option value="3">High</option>
-                                            <option value="4">Very High</option>
-                                        </select>
-                                    {% endif %}
-                                </td>
-                            {% endfor %}
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-
-            <div class="submit-btn">
-                <input type="submit" value="Submit Form">
-            </div>
-        </form>
-    </div>
+      document.querySelectorAll('.matrix-table td[data-tooltip]').forEach(function(cell) {
+        cell.addEventListener('mouseenter', function() {
+          setTooltip(cell.getAttribute('data-tooltip'));
+        });
+        cell.addEventListener('mouseleave', function() {
+          setTooltip("");
+        });
+        cell.addEventListener('focus', function() {
+          setTooltip(cell.getAttribute('data-tooltip'));
+        });
+        cell.addEventListener('blur', function() {
+          setTooltip("");
+        });
+        cell.addEventListener('click', function() {
+          setTooltip(cell.getAttribute('data-tooltip'));
+        });
+      });
+    });
+  </script>
 </body>
 </html>

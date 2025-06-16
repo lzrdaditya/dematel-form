@@ -1,21 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>DEMATEL Access</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <meta charset="UTF-8">
+  <title>Welcome to DEMATEL Matrix Form Entrance</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='modern.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h1>Welcome to DEMATEL Web App</h1>
-        <form method="post" action="/form">
-            <label for="token">Enter your access token:</label>
-            <input type="text" id="token" name="token" required>
-            <input type="submit" value="Continue">
-        </form>
-        {% if error %}
-            <p style="color: red;">{{ error }}</p>
-        {% endif %}
-    </div>
+  <main>
+    <section class="matrix-container" style="text-align:center;">
+      <h1 class="main-title" style="margin-bottom:0.7em;">Welcome to DEMATEL Matrix</h1>
+      <p style="font-size:1.17rem; color: var(--text-soft); margin-bottom:2.1em;">
+        To proceed, please enter the token you were given in the field below.
+      </p>
+      {% if error %}
+        <p style="color:red;">{{ error }}</p>
+      {% endif %}
+      <form method="POST" action="{{ url_for('index') }}">
+        <input
+          type="text"
+          name="token"
+          required
+          placeholder="Enter your token"
+          style="font-size:1.1em; padding:0.7em 1.2em; border-radius:9px; border:1.5px solid var(--border); margin-bottom:1.5em; width:75%; max-width:300px; outline:none;"
+        >
+        <br>
+        <button type="submit" class="modern-btn" style="margin-top:0;">
+          Start Matrix Input
+        </button>
+      </form>
+    </section>
+  </main>
 </body>
 </html>

@@ -1,14 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Submission Success</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <meta charset="UTF-8">
+  <title>Submission Successful – DEMATEL Matrix</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='modern.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h2 class="success">Thank you, {{ expert_name }}!</h2>
-        <p>Your DEMATEL matrix has been successfully submitted.</p>
-    </div>
+  <main>
+    <section class="matrix-container" style="text-align:center;">
+      <svg width="70" height="70" viewBox="0 0 70 70" style="margin-bottom:1em;">
+        <circle cx="35" cy="35" r="32" fill="#eaf6ff" stroke="#0071e3" stroke-width="3"/>
+        <polyline points="22,37 32,47 48,28" fill="none" stroke="#0071e3" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <h1 class="main-title" style="margin-bottom:0.6em;">Submission Successful!</h1>
+      <p style="font-size:1.17rem; color: var(--text-soft); margin-bottom:2.1em;">
+        Thank you for submitting your DEMATEL matrix.<br>
+        Your input has been received.
+      </p>
+      <a href="{{ url_for('index') }}" class="modern-btn" style="text-decoration:none;display:inline-block;">
+        Back to Home
+      </a>
+    </section>
+  </main>
 </body>
 </html>

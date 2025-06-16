@@ -1,0 +1,306 @@
+:root {
+  --accent: #0071e3;
+  --accent-dark: #005bb5;
+  --bg-gradient: linear-gradient(135deg, #f5f6fa 0%, #eaf6ff 100%);
+  --surface: #fff;
+  --surface-blur: rgba(255,255,255,0.72);
+  --shadow: 0 8px 32px 0 rgba(60,60,80,0.13);
+  --radius: 16px;
+  --table-head: #f3f5fb;
+  --text-main: #151515;
+  --text-soft: #8592a6;
+  --border: #e0e4ea;
+  --select-bg: #f8fafc;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-gradient);
+  font-family: 'SF Pro Display', 'Inter', 'Segoe UI', Arial, sans-serif;
+  color: var(--text-main);
+  min-height: 100vh;
+}
+
+main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* 1. Expand the container to full width */
+.matrix-container {
+  max-width: 100%;
+  width: 100vw;
+  height: 100vh;
+  box-sizing: border-box;
+  padding: 2.5rem;
+  margin: 0;
+  border-radius: 0; /* optional: square edges for fullscreen */
+}
+
+/* 2. Use flexbox to make the matrix table fill vertical space */
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  width: 100vw;
+  padding: 0;
+}
+
+/* 3. Matrix scroll area should expand horizontally and vertically */
+.table-scroll {
+  width: 100%;
+  height: calc(100vh - 250px); /* adjust based on title height, form, etc. */
+  overflow: auto;
+}
+
+/* 4. Table should grow naturally */
+.matrix-table {
+  width: 100%;
+  table-layout: auto;
+  min-width: max-content;
+}
+
+.main-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -1px;
+  margin: 0 0 1.3rem 0;
+  text-align: center;
+  background: linear-gradient(90deg,#0071e3 40%,#3a8fff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.expert-info {
+  font-size: 1.25rem;
+  margin-bottom: 1.3rem;
+  text-align: center;
+  color: var(--text-soft);
+}
+
+.matrix-tooltip-bar {
+  background: #f4f7fb;
+  color: #1460aa;
+  font-size: 1.08em;
+  border-radius: 7px;
+  min-height: 2.1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  box-shadow: 0 1px 3px rgba(80,80,100,0.04);
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+  white-space: pre-line;
+  padding: 0.3em 0.7em;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 1.7rem;
+  border-radius: 12px;
+  box-shadow: 0 1px 6px rgba(60,60,80,0.07);
+}
+
+.matrix-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--surface);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(60,60,80,0.09);
+  width: 100%;
+  table-layout: auto;
+}
+
+.matrix-table th,
+.matrix-table td {
+  font-size: 1.15rem;
+  padding: 1rem 1.2rem;
+  border: none;
+  text-align: center;
+}
+
+.matrix-table thead th {
+  background: var(--table-head);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 1.18rem;
+  border-bottom: 1.5px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+
+.matrix-table th {
+  background: var(--table-head);
+  font-weight: 600;
+  position: sticky;
+  left: 0;
+  z-index: 4;
+  background: #f3f7fc;
+  box-shadow: 2px 0 6px -2px #bbb1;
+}
+
+.matrix-table td:first-child {
+  position: sticky;
+  left: 0;
+  background: #f8fafc;
+  z-index: 2;
+  box-shadow: 2px 0 6px -2px #bbb1;
+}
+
+.matrix-table thead th:first-child {
+  z-index: 5;
+  background: #f3f7fc;
+}
+
+.matrix-table td {
+  background: var(--surface);
+}
+
+.matrix-table .cell-unselectable {
+  background: #e9ecef !important;
+  color: #a1a7b3 !important;
+  font-weight: 700;
+  text-align: center;
+  border-radius: 6px;
+  box-shadow: 0 0 0 2px #c3c8d1 inset;
+  cursor: not-allowed;
+  transition: box-shadow 0.2s;
+}
+.matrix-table .cell-unselectable:focus, 
+.matrix-table .cell-unselectable:hover {
+  box-shadow: 0 0 0 3px #0071e3 inset;
+  outline: none;
+}
+
+.modern-select {
+  width: 100%;
+  font-size: 1.12rem;
+  padding: 0.55em 0.8em;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--select-bg);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-shadow: none;
+  min-width: 140px;
+}
+
+.modern-select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1.5px #0071e388;
+}
+
+.modern-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 1em 3em;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.13s, box-shadow 0.15s;
+  box-shadow: 0 2px 10px rgba(0,113,227,0.06);
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  margin: 0 auto;
+}
+
+.modern-btn:active {
+  background: var(--accent-dark);
+  transform: scale(0.97);
+}
+
+.modern-btn:hover {
+  background: #218aff;
+  box-shadow: 0 4px 20px rgba(0,113,227,0.13);
+}
+
+.loader {
+  border: 2.5px solid #e9ecef;
+  border-top: 2.5px solid var(--accent);
+  border-radius: 50%;
+  width: 1.15em;
+  height: 1.15em;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+}
+
+/* Responsive tweaks */
+@media (max-width: 900px) {
+  .matrix-tooltip-bar {
+    font-size: 0.95em;
+    padding: 0.2em 0.35em;
+  }
+  .matrix-table th,
+  .matrix-table td {
+    padding: 0.5em;
+    font-size: 0.95em;
+  }
+  .matrix-container {
+    padding: 0.8rem 0.2rem;
+  }
+}
+
+@media (max-width: 800px) {
+  .matrix-container {
+    padding: 1.1rem 0.4rem 1.5rem 0.4rem;
+    min-width: 0;
+  }
+  .main-title { font-size: 1.27rem; }
+  .matrix-table th, .matrix-table td {
+    padding: 0.34em 0.4em;
+    font-size: 0.97em;
+  }
+}
+
+/* === Resize Form and Table Area === */
+#matrix-form.matrix-form {
+  width: 100%;
+  max-width: 2000px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 0 1rem;
+}
+
+.table-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.matrix-table {
+  width: 100%;
+  table-layout: auto;
+  min-width: max-content;
+}
+
+.matrix-table th,
+.matrix-table td {
+  min-width: 140px;
+  padding: 1rem 1.5rem;
+  font-size: 1.15rem;
+}
+
+.matrix-table select.modern-select {
+  min-width: 140px;
+  font-size: 1.1rem;
+  padding: 0.5rem 0.8rem;
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin: Configure DEMATEL Matrix</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Use the modern Apple-inspired CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='modern.css') }}">
+    <script>
+        function renderInputs() {
+            let num = parseInt(document.getElementById('num_factors').value);
+            let container = document.getElementById('factors_container');
+            let html = '';
+            // Get factor_names from a data attribute
+            let factorNames = [];
+            try {
+                factorNames = JSON.parse(container.getAttribute('data-factornames'));
+            } catch(e) {}
+            for (let i = 0; i < num; i++) {
+                let value = (factorNames && factorNames.length > i) ? factorNames[i] : '';
+                html += `<label style="display:block;margin-bottom:1.1em;font-size:1.06em;color:var(--accent);text-align:left;">
+                    Factor ${i+1} Name:
+                    <input type="text" name="factor_name_${i}" required value="${value}"
+                        style="font-size:1.07em; padding:0.5em 0.8em; border-radius:7px; border:1.5px solid var(--border); width:80%; margin-top:0.3em;">
+                </label>`;
+            }
+            container.innerHTML = html;
+        }
+    </script>
+</head>
+<body style="background:var(--bg-gradient);">
+    <main>
+        <section class="matrix-container" style="max-width:520px;text-align:center;">
+            <h1 class="main-title" style="margin-bottom:0.8em;">Admin: Configure DEMATEL Matrix</h1>
+            <form method="post" style="margin-bottom:1.5em;">
+                <label for="num_factors" style="font-size:1.12em; color:var(--text-main);">
+                    Number of Factors:
+                </label>
+                <input type="number" id="num_factors" name="num_factors" min="2" max="50"
+                    value="{{ factor_names|length if factor_names else 3 }}" required
+                    style="font-size:1.1em; padding:0.5em 0.7em; border-radius:7px; border:1.5px solid var(--border); width:90px; margin-bottom:1.3em; margin-left:0.6em;"
+                    onchange="renderInputs()">
+                <div id="factors_container" data-factornames='{{ factor_names|tojson|safe }}'></div>
+                <button type="submit" class="modern-btn" style="margin-top:1.3em;">Save Form Configuration</button>
+            </form>
+            <a href="{{ url_for('index') }}" class="modern-btn" style="background:var(--text-soft);color:#fff;text-decoration:none;">Back to Token Entry</a>
+        </section>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            renderInputs();
+        });
+        document.getElementById('num_factors').addEventListener('change', renderInputs);
+    </script>
+</body>
+</html>
