@@ -1,13 +1,26 @@
+# Python cache and compiled files
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+
+# Environment variables
 .env
 venv/
 .env/
+
+# Databases and logs
 *.sqlite3
 *.log
+
+# macOS specific
 .DS_Store
+
+# Distribution info
 *.egg-info/
+
+# Instance folder (common in Flask apps)
 instance/
+
+# Sensitive credential files
 service_account.json
